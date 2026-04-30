@@ -1,0 +1,14 @@
+XG,Expected Goals,Expected Goals p90 created by a team while playing 11 versus 11.
+XGA,Expected Goals Allowed,Expected Goals p90 allowed by a team while playing 11 versus 11.
+XGDIFF,Expected Goals Difference,The difference between xG (created) and xGA (allowed) while playing 11 versus 11.
+POS,Possession %,The percentage of time a team controls the ball during the match.
+FTILT,Field TIlt %,The percentage of ball possession based on touches completed in the final thirds of the field.
+XT,Expected Threat,The measure of scoring opportunities created via passes and crosses. Calculated based on start/end locations of non-shot events.
+XTA,Expected Threat Allowed,The measure of scoring opportunities allowed via passes and crosses. Calculated based on start/end locations of non-shot events.
+XTDIFF,Expected Threat Difference,The difference between xT (created) and xTA (allowed). Calculated based on start/end locations of non-shot events.
+DLINE,Defensive Line,The average distance (in meters) from a team's goal to where its defensive actions occur.
+ODLINE,Opponent Defensive Line,The average distance (in meters) from the opponent's goal to where their defensive actions occur.
+BUILD,Pass Completion in Buildup %,The percentage of successfully completed passes outside the final third of the field.
+OBUILD,Opponent Pass Completion in Buildup %,The percentage of successfully completed passes by the opponent outside the final third of the field.
+LOS,Danger Posession Lost,"Unsuccessful passes, lost dribbles, or bad touches near a team's own goal. Higher values indicate low press resistance."
+OLOS,Opponent Danger Posession Lost,"The opponent's unsuccessful passes, lost dribbles, or bad touches near their goal. Higher values indicate more effective pressing."

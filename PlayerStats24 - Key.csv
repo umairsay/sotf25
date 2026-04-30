@@ -1,0 +1,15 @@
+POS,Position Group,"Player's position group: DEF (defenders), MID (midfielders), ATT (attackers)."
+XG,Expected Goals P90,"Expected Goals per 90 minutes, excluding penalties and own goals."
+XTC,xT (Pass + Cross) P90,Expected Threat created through passes and crosses per 90 minutes. Measures scoring opportunities generated via all pass types including crosses.
+XTP,xT (Pass Only) P90,Expected Threat created through passes only per 90 minutes. Excludes crosses.
+PPAS,Progression Pass P90,Passes that move the ball significantly towards the opponent's goal per 90 minutes.
+PCRY,Progression Carry P90,Ball carries that move the ball significantly towards the opponent's goal per 90 minutes.
+PBX,Penbox Carries P90,Ball carries that enter the opponent's penalty box per 90 minutes.
+PRCV,Progression Received P90,Progressive passes received per 90 minutes. Measures how often a player is the target of forward-moving passes.
+PASS,Passes P90,Total passes attempted per 90 minutes.
+PC%,Pass Completion %,"Percentage of passes successfully completed, calculated from total successful passes divided by total attempted passes across all matches."
+HDA,High Def Actions P90,"Defensive actions (tackles, interceptions, clearances) performed in the opponent's half per 90 minutes. Indicates an aggressive, high-pressing defensive contribution."
+TKLA,Tackle Attempts P90,Total tackle attempts per 90 minutes.
+TKL%,Tackle Success %,"Percentage of tackle attempts that were successful, calculated from total successful tackles divided by total tackle attempts across all matches."
+AERA,Aerial Duels P90,Total aerial duels contested per 90 minutes.
+AER%,Aerial Success %,"Percentage of aerial duels won, calculated from total aerials won divided by total aerials contested across all matches."
