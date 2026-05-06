@@ -8,7 +8,7 @@ library(factoextra)
 library(broom)
 library(ggbeeswarm)
 
-# --- DATA ---
+# data
 
 la_teams   <- read_csv("/Users/umairs/Downloads/LaLigaPremTeamsPlayers2425/TeamStats24 - LaLiga24.csv")
 pr_teams   <- read_csv("/Users/umairs/Downloads/LaLigaPremTeamsPlayers2425/TeamStats24 - Prem24.csv")
@@ -52,7 +52,7 @@ teams <- teams %>%
   )
 
 
-# --- CLUSTERING & PCA ---
+# clustering + pca
 
 clust_vars   <- c("FTILT", "xGDiff", "DLINE", "LOS", "BUILD")
 teams_scaled <- teams %>%
@@ -71,7 +71,7 @@ pca_coords <- as_tibble(pca_fit$x[, 1:2]) %>%
   mutate(Team = teams$Team, league = teams$league, cluster = teams$cluster)
 
 
-# --- PLAYER Z-SCORES ---
+# zscores
 
 player_vars <- c("xTP", "xTC", "PRCV", "PCpct", "PPAS", "PCRY",
                  "HDA", "xG", "PBX", "AERA", "AERpct", "TKLA", "TKLpct")
@@ -101,7 +101,7 @@ players_teams <- players_z %>%
 pos_labels <- c("ATT" = "Attackers", "DEF" = "Defenders", "MID" = "Midfielders")
 
 
-# --- FLUIDITY ---
+# fluidity
 
 med_ppas_att <- median(players$PPAS[players$POS == "ATT"])
 med_hda_att  <- median(players$HDA[players$POS == "ATT"])
@@ -126,7 +126,7 @@ fluidity <- players %>%
             by = c("Team", "league"))
 
 
-# --- UNIQUENESS ---
+# uniqueness
 
 prem_idx   <- which(teams$league == "Prem")
 laliga_idx <- which(teams$league == "La Liga")
@@ -145,7 +145,7 @@ for (i in seq_len(nrow(teams))) {
 }
 
 
-# --- REGRESSIONS ---
+# regressions
 
 prem_std <- lm(scale(xGDiff) ~ scale(FTILT) + scale(DLINE) + scale(BUILD) +
                  scale(LOS) + scale(OLOS),
@@ -156,7 +156,7 @@ laliga_std <- lm(scale(xGDiff) ~ scale(FTILT) + scale(DLINE) + scale(BUILD) +
                  data = teams %>% filter(league == "La Liga"))
 
 
-# --- PALETTE ---
+# cosmetic
 
 col_ll <- "#e8c84a"; col_pr <- "#6baed6"
 shp_ll <- 17; shp_pr <- 16
@@ -165,9 +165,7 @@ base_theme <- theme_minimal(base_size = 12) +
   theme(plot.title = element_text(face = "bold"), legend.position = "top")
 
 
-# ============================================================
-# 1 / 10  TACTICAL DISTRIBUTIONS
-# ============================================================
+# 1. tactical distributions
 
 tac_vars   <- c("FTILT", "xGDiff", "DLINE", "LOS", "BUILD", "POS")
 tac_labels <- c(
@@ -194,9 +192,7 @@ teams %>%
   theme(strip.text = element_text(face = "bold", size = 9))
 
 
-# ============================================================
-# 2 / 10  TACTICAL MAP
-# ============================================================
+# 2. tactical map
 
 ggplot(pca_coords, aes(x = PC1, y = PC2)) +
   geom_point(aes(colour = cluster, shape = league), size = 3.5, alpha = 0.9) +
@@ -211,9 +207,7 @@ ggplot(pca_coords, aes(x = PC1, y = PC2)) +
   base_theme + theme(legend.position = "right")
 
 
-# ============================================================
-# 3 / 10  WHAT EACH LEAGUE REWARDS
-# ============================================================
+# 3. what each league rewards
 
 coef_compare <- bind_rows(
   tidy(prem_std) %>%
@@ -245,11 +239,7 @@ ggplot(coef_compare, aes(x = estimate, y = reorder(term, abs(estimate)),
   base_theme
 
 
-# ============================================================
-# 4 / 10  BUILDUP VS RESULTS
-# The picture version of the most important finding.
-# Prem trendline slopes down. La Liga is flat.
-# ============================================================
+# 4. buildup v results
 
 build_labels <- c("Barcelona", "Real", "Arsenal", "Man City",
                   "Liverpool", "Getafe", "Ipswich", "Southampton",
@@ -276,26 +266,7 @@ teams %>%
   theme(legend.position = "none",
         strip.text = element_text(face = "bold"))
 
-
-# ============================================================
-# 5 / 10  PLAYER ARCHETYPES
-#
-# Label philosophy — balance of expected and unexpected:
-#
-#   Pedri          — anchor. Top right. Confirms the metric works.
-#   Lamine Yamal   — top right, 17 years old in elite company
-#   Jérémy Doku    — far right, pure carrier, expected there
-#   Erling Haaland — bottom left, pure finisher — most prolific striker
-#                    in the Prem scores almost nothing here because he
-#                    positions, times runs, and finishes. Nothing else.
-#   Jude Bellingham — top LEFT not top right. One of the biggest names
-#                    in football. People expect him far right. He plays
-#                    as an advanced #10, scores from runs, doesn't carry
-#                    or cross. The metric is honest about what he does.
-#   Óscar Mingueza — right back in midfielder space. Nobody expects that.
-#   Bryan Zaragoza — alone bottom right. Bayern loanee at Osasuna.
-#                    Dribbles to danger constantly. No passing creativity.
-# ============================================================
+# 5. player archetypes
 
 label_arch <- players_z %>%
   filter(Player %in% c(
@@ -328,19 +299,7 @@ ggplot(players_z, aes(x = threat_creation, y = creativity)) +
   base_theme + theme(legend.position = "right")
 
 
-# ============================================================
-# 6 / 10  SYSTEM vs PLAYER
-#
-# Label philosophy — balance of expected and unexpected:
-#
-#   Pedri          — MID, anchor. Highest above line at most dominant club.
-#   Lamine Yamal   — ATT, above line, 17 at Barcelona — expected there
-#   Erling Haaland — ATT, below line even at Man City. Pure finisher.
-#   Nicolas Pépé   — ATT, Arsenal's then-record £72m signing. Complete
-#                    flop. Written off. Now above trendline at Villarreal.
-#   Daley Blind    — DEF, creative at mid-table Girona. Data found him.
-#   Tom Cairney    — MID, above his system quietly at Fulham at 33.
-# ============================================================
+# 6. system v player
 
 label_sys <- players_teams %>%
   filter(Player %in% c(
@@ -374,20 +333,7 @@ ggplot(players_teams, aes(x = FTILT, y = creativity)) +
   theme(legend.position = "right", strip.text = element_text(face = "bold"))
 
 
-# ============================================================
-# 7 / 10  CREATIVE MIDFIELDERS
-#
-# Label philosophy — balance of expected and unexpected:
-#
-#   Pedri          — far right La Liga, anchor
-#   Luka Modric    — far right, 39 years old, still there
-#   Martin Ødegaard — right of Prem body, expected there
-#   Tom Cairney    — further right than Ødegaard. Nobody sees that coming.
-#   Mauro Arambarri — far left at -4.23. Getafe identity in one dot.
-#   Declan Rice    — 0.60. Arsenal Player of Season, £105m, considered
-#                    world's best midfielder. The gap between reputation
-#                    and position on this chart is the story.
-# ============================================================
+# 7. creative midfielders
 
 mid_data <- players_z %>% filter(POS == "MID")
 
@@ -420,9 +366,7 @@ ggplot(mid_data, aes(x = creativity, y = league, colour = league)) +
   theme(legend.position = "none")
 
 
-# ============================================================
-# 8 / 10  POSITIONAL FLUIDITY
-# ============================================================
+# 8. positional fluidity
 
 fluid_labels <- c("Barcelona", "Man City", "Liverpool", "Arsenal",
                   "Ipswich", "Valladolid", "Southampton", "Leicester",
@@ -447,9 +391,7 @@ ggplot(fluidity, aes(x = fluidity_pct, y = FTILT)) +
   base_theme
 
 
-# ============================================================
-# 9 / 10  THE COMPLETE MIDFIELDER
-# ============================================================
+# 9. the complete midfielder
 
 players_z %>%
   filter(POS == "MID") %>%
@@ -469,9 +411,7 @@ players_z %>%
   theme(legend.position = "right", panel.grid.major.y = element_line(colour = "grey93"))
 
 
-# ============================================================
-# 10 / 10  UNIQUENESS vs PERFORMANCE
-# ============================================================
+# 10. uniqueness v performance
 
 diff_labels <- c("Barcelona", "Arsenal", "Man City", "Liverpool",
                  "Getafe", "Atletico", "Real", "Everton",
@@ -498,9 +438,7 @@ ggplot(teams, aes(x = centroid_dist, y = xGDiff)) +
   base_theme
 
 
-# ============================================================
-# PROSE AMMUNITION (console only)
-# ============================================================
+#
 
 levene_results <- map_dfr(tac_vars, function(var) {
   test <- leveneTest(teams[[var]] ~ as.factor(teams$league))
